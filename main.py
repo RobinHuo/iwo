@@ -18,6 +18,8 @@ def main(cfg: DictConfig) -> None:
         from src.utils.representation_synthetic import make_datasets
     elif cfg.representation.name in ["dsprites", "cars3d", "smallnorb", "shapes3d"]:
         from src.utils.representation_learned import make_datasets
+    elif cfg.representation.name == "custom":
+        from src.utils.representation_custom import make_datasets
     else:
         raise NotImplementedError(
             f"Representation {cfg.representation.name} is not implemented."
@@ -32,7 +34,7 @@ def main(cfg: DictConfig) -> None:
     mean_iwo = np.mean(iwo_test_out["mw_iwo"])
     mean_rnk = np.mean(iwo_test_out["mw_iwr"])
 
-    if cfg.training.debug or cfg.representation.name == "synthetic":
+    if cfg.training.debug or cfg.representation.name in ["synthetic", "custom"]:
         print(f"Mean IWO: {mean_iwo}")
         print(f"Mean IWR: {mean_rnk}")
         # We return min of validation mean_scores for hyperparameter optimization.
