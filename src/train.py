@@ -54,7 +54,11 @@ def train_iwo_pipeline(cfg, train_dataset, val_dataset, test_dataset):
 
     litiwo = LitIWO(train_dataset, model, cfg)
 
-    trainer.fit(litiwo, dataloaders[0], dataloaders[1])
+    resume_ckpt = None
+    if "resume_ckpt" in cfg.training and cfg.training.resume_ckpt:
+        resume_ckpt = cfg.training.resume_ckpt
+
+    trainer.fit(litiwo, dataloaders[0], dataloaders[1], ckpt_path=resume_ckpt)
 
     trainer.test(litiwo, dataloaders[2])
     iwo_test_out = litiwo.iwo_test_out
